@@ -16,9 +16,9 @@ discord-webhook==1.4.1
     # via -r requirements.in
 idna==3.11
     # via requests
-pydantic==2.14.1
+pydantic==2.14.2
     # via -r requirements.in
-pydantic-core==2.50.1
+pydantic-core==2.50.2
     # via pydantic
 pyyaml==6.0.3
     # via -r requirements.in
