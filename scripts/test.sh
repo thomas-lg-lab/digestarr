@@ -3,8 +3,10 @@
 #
 # Resolution order (override with DIGESTARR_TEST_RUNNER=docker|local):
 #   1. Already inside a container (the devcontainer shell): run pytest directly.
-#   2. Docker available: run pytest in the `digestarr-devcontainer` image,
-#      building it from .devcontainer/Dockerfile.dev first if it is missing.
+#   2. Docker available: run pytest in the `digestarr-devcontainer` image.
+#      The image is (re)built from .devcontainer/Dockerfile.dev on every run, as
+#      in CI; with the layer cache that takes a couple of seconds when nothing
+#      changed and picks up lockfile or Dockerfile changes automatically.
 #      This is the only runner that matches CI (Linux, Python from .python-version).
 #   3. Otherwise: fall back to the local interpreter (`PYTHONPATH=src pytest`).
 #
@@ -41,11 +43,11 @@ case "$RUNNER" in
 			echo "❌ DIGESTARR_TEST_RUNNER=docker but Docker is not available."
 			exit 1
 		fi
-		if ! docker image inspect "$IMAGE" > /dev/null 2>&1; then
-			echo "🐳 Building $IMAGE from .devcontainer/Dockerfile.dev (first run only)..."
-			docker build -f .devcontainer/Dockerfile.dev -t "$IMAGE" .
-			echo ""
-		fi
+		# Always build: the layer cache makes this a no-op in a couple of seconds
+		# and a stale image (lockfile bump, Dockerfile change) is rebuilt as in CI.
+		echo "🐳 Building $IMAGE from .devcontainer/Dockerfile.dev (cached)..."
+		docker build -q -f .devcontainer/Dockerfile.dev -t "$IMAGE" . > /dev/null
+		echo ""
 
 		# Git Bash on Windows rewrites POSIX-looking arguments such as /app into
 		# Windows paths; `pwd -W` yields a drive path Docker Desktop understands.

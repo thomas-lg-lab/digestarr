@@ -35,7 +35,7 @@ Required environment variables for default config placeholders:
 
 ### 🧪 `test.sh` - Run Tests
 
-Run pytest with coverage, the way CI does. When Docker is available the suite runs inside the `digestarr-devcontainer` image (built from `.devcontainer/Dockerfile.dev` on first use); inside the devcontainer, or without Docker, it uses the local interpreter.
+Run pytest with coverage, the way CI does. When Docker is available the suite runs inside the `digestarr-devcontainer` image (rebuilt from `.devcontainer/Dockerfile.dev` on every run; the layer cache makes that a couple of seconds and picks up lockfile changes); inside the devcontainer, or without Docker, it uses the local interpreter.
 
 ```bash
 ./scripts/test.sh                           # Run default test suite + coverage

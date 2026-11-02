@@ -56,7 +56,7 @@ feature/* ──► develop ──► release/* ──► main
 ## Testing
 
 - Run all tests: `./scripts/test.sh` (pass pytest arguments through, e.g. `./scripts/test.sh tests/test_config.py -k secrets`)
-- `scripts/test.sh` mirrors CI: when Docker is available it runs pytest inside the `digestarr-devcontainer` image (built from `.devcontainer/Dockerfile.dev` on first use, Linux + the Python of `.python-version`); inside the devcontainer, or without Docker, it falls back to the local interpreter. Force a runner with `DIGESTARR_TEST_RUNNER=docker|local`
+- `scripts/test.sh` mirrors CI: when Docker is available it runs pytest inside the `digestarr-devcontainer` image (rebuilt from `.devcontainer/Dockerfile.dev` on every run, cached, so lockfile changes are picked up; Linux + the Python of `.python-version`); inside the devcontainer, or without Docker, it falls back to the local interpreter. Force a runner with `DIGESTARR_TEST_RUNNER=docker|local`
 - Only the Docker runner is authoritative: a host interpreter may differ in Python version and platform (the project targets 3.14, see `.python-version`)
 - Unit tests mock at the class level; integration tests mock only at the HTTP boundary
 - Mark tests with `@pytest.mark.unit` or `@pytest.mark.integration`
