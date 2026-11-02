@@ -1,6 +1,5 @@
 """Main application entrypoint: orchestrates Tautulli fetching and Discord notification."""
 
-import importlib.metadata
 import logging
 import os
 import re
@@ -24,6 +23,7 @@ from media_source import MediaItem, MediaSourceClient, PlayStatsSource, ServerId
 from scheduler import run_scheduled
 from tautulli_client import TautulliClient
 from tracearr_client import TracearrClient
+from version import get_app_version
 
 logger = logging.getLogger("app")
 
@@ -385,12 +385,7 @@ def main() -> int:
     # Bootstrap logging level from raw config so load-time logs honor user verbosity
     setup_logging(get_bootstrap_log_level(config_path))
 
-    version = os.getenv("APP_VERSION") or None
-    if not version:
-        try:
-            version = importlib.metadata.version("digestarr")
-        except importlib.metadata.PackageNotFoundError:
-            version = "unknown"
+    version = get_app_version()
 
     version_display = f"v{version}" if re.match(r"^\d+\.\d+\.\d+(?:-.*)?$", version) else version
 
