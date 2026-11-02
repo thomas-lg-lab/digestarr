@@ -102,12 +102,25 @@ def _is_env_var_reference(value: str) -> bool:
     return isinstance(value, str) and bool(ENV_VAR_PATTERN.search(value))
 
 
+def _is_secret_file_path(value: str) -> bool:
+    """
+    Return True if a string value should be treated as a secret-file path.
+
+    POSIX absolute paths (``/run/secrets/...``) are the Docker secrets contract and
+    are honoured on every platform. ``Path.is_absolute()`` additionally accepts
+    drive-absolute paths on Windows hosts, so the same config works
+    in a native Windows checkout; on POSIX such strings stay literal values.
+    """
+    return value.startswith("/") or Path(value).is_absolute()
+
+
 def _resolve_value(value: ConfigValue, required_field: str | None = None) -> ConfigValue:
     """
     Resolve a configuration value, reading from file if it's a file path.
 
-    If the value is a string starting with '/', attempts to read it as a file path.
-    This supports Docker secrets pattern where env vars point to secret files.
+    If the value is a string holding an absolute path (POSIX ``/...`` as used by
+    Docker secrets, or a drive-absolute path on Windows hosts), attempts to read it
+    as a file. Relative paths and other strings are returned unchanged.
 
     Args:
         value: The value to resolve (can be any type)
@@ -126,7 +139,7 @@ def _resolve_value(value: ConfigValue, required_field: str | None = None) -> Con
     """
     max_secret_size = 10 * 1024  # 10KB max for secret files
 
-    if isinstance(value, str) and value.startswith("/"):
+    if isinstance(value, str) and _is_secret_file_path(value):
         file_path = Path(value)
         if file_path.exists() and file_path.is_file():
             try:
@@ -142,7 +155,7 @@ def _resolve_value(value: ConfigValue, required_field: str | None = None) -> Con
                     )
                     raise ValueError(f"Secret file {value} too large: {file_size} bytes")
 
-                content = file_path.read_text().strip()
+                content = file_path.read_text(encoding="utf-8").strip()
 
                 # Validate content is reasonable (printable ASCII or UTF-8)
                 if not content:
