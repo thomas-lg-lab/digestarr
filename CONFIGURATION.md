@@ -205,9 +205,10 @@ answers `200` with
 `{"status": "ok", "version": "<app-version>", "uptime_seconds": <int>, "last_run": "<iso-timestamp-or-null>"}`.
 Any other path returns `404`. `version` is the running application's version
 (`APP_VERSION` from the image, else the installed package, else `unknown`) and
-`uptime_seconds` is the time since the process started. `last_run` is the last run
-that finished building a summary — it is updated even if notification delivery
-failed, since it reports scheduler liveness rather than delivery success.
+`uptime_seconds` is the whole number of seconds since the process started.
+`last_run` is the last run that finished building a summary — it is updated even if
+notification delivery failed, since it reports scheduler liveness rather than
+delivery success.
 
 **It only runs in scheduled mode.** In `run_once` mode the process exits immediately,
 so no probe could reach it; the setting is ignored there.

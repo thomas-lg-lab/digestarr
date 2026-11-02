@@ -306,7 +306,8 @@ Script reference: [scripts/README.md](scripts/README.md)
 │   ├── scheduler.py # APScheduler daemon mode
 │   ├── media_source.py # Backend-neutral media source contract
 │   ├── tautulli_client.py # Tautulli API client
-│   └── tracearr_client.py # Tracearr API client
+│   ├── tracearr_client.py # Tracearr API client
+│   └── version.py # Application version resolution
 ├── tests/ # Test suite
 │   ├── test_app.py # App logic tests
 │   ├── test_config.py # Configuration tests
@@ -318,7 +319,8 @@ Script reference: [scripts/README.md](scripts/README.md)
 │   ├── test_logging_config.py # Logging config tests
 │   ├── test_scheduler.py # Scheduler tests
 │   ├── test_tautulli_client.py # Tautulli client tests
-│   └── test_tracearr_client.py # Tracearr client tests
+│   ├── test_tracearr_client.py # Tracearr client tests
+│   └── test_version.py # Version resolution tests
 ├── scripts/ # Helper scripts
 │   ├── clean.sh # Clean up caches
 │   ├── compile-deps.sh # Regenerate lockfiles from requirements files
@@ -399,8 +401,8 @@ docker exec <container> curl -s http://127.0.0.1:8080/health
 ```
 
 `last_run` is `null` until the first run completes. `version` is the image tag
-(`unknown` outside a built image or installed package) and `uptime_seconds` counts
-from process start.
+(`3.1.1`, `develop`, `latest`; `unknown` outside a built image or installed package)
+and `uptime_seconds` counts whole seconds since the process started.
 
 To let an **external monitor** (Uptime Kuma, Gatus, ...) poll it, also set
 `HEALTH_HOST=0.0.0.0` — binding loopback only is the default and is not reachable from

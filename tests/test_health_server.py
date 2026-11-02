@@ -45,12 +45,8 @@ class TestHealthEndpoint:
             assert response.headers["Content-Type"] == "application/json"
             payload = json.loads(response.read())
 
-        assert payload == {
-            "status": "ok",
-            "version": "0.0.0-test",
-            "uptime_seconds": payload["uptime_seconds"],
-            "last_run": None,
-        }
+        assert isinstance(payload.pop("uptime_seconds"), int)
+        assert payload == {"status": "ok", "version": "0.0.0-test", "last_run": None}
 
     @pytest.mark.unit
     def test_health_reports_last_run_after_a_run(self, health_server):

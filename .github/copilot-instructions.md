@@ -29,6 +29,7 @@ src/
   scheduler.py         # APScheduler wrapper
   health_server.py     # Optional GET /health endpoint (scheduled mode only)
   logging_config.py    # Logging setup
+  version.py           # Version resolution (APP_VERSION, package metadata, "unknown")
 tests/
   test_*.py            # Unit tests (pytest markers: unit, integration)
 ```
