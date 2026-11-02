@@ -132,6 +132,8 @@ Run all tests:
 ./scripts/test.sh
 ```
 
+From a host checkout the script runs the suite inside the `digestarr-devcontainer` image when Docker is available (same Linux image and Python as CI), and falls back to the local interpreter otherwise. Set `DIGESTARR_TEST_RUNNER=docker` or `local` to force one.
+
 Run a subset:
 
 ```bash
