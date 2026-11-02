@@ -395,10 +395,12 @@ environment:
 
 ```bash
 docker exec <container> curl -s http://127.0.0.1:8080/health
-# {"status": "ok", "last_run": "2026-08-31T16:00:03+00:00"}
+# {"status": "ok", "version": "3.1.1", "uptime_seconds": 86412, "last_run": "2026-08-31T16:00:03+00:00"}
 ```
 
-`last_run` is `null` until the first run completes.
+`last_run` is `null` until the first run completes. `version` is the image tag
+(`unknown` outside a built image or installed package) and `uptime_seconds` counts
+from process start.
 
 To let an **external monitor** (Uptime Kuma, Gatus, ...) poll it, also set
 `HEALTH_HOST=0.0.0.0` — binding loopback only is the default and is not reachable from
