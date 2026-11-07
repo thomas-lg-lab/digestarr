@@ -13,7 +13,6 @@ on:
       - ".github/ISSUE_TEMPLATE/**"
       - ".github/conventional-commit-types.json"
       - "renovate.json"
-      - ".github/workflows/renovate.yml"
   # No paths-ignore here on purpose. The ruleset on main and develop requires
   # build-and-push, tests and quality; a workflow skipped by path filtering never
   # reports those checks, so they stay pending forever and the PR can never merge.
