@@ -423,7 +423,7 @@ For broader hardening guidance, see [Security](README.md#security).
 ```yaml
 services:
   app:
-    image: ghcr.io/thomas-lg/digestarr:latest
+    image: ghcr.io/thomas-lg-lab/digestarr:latest
     volumes:
       - ./configs:/app/configs:ro
       - ./secrets:/run/secrets:ro
@@ -439,7 +439,7 @@ services:
 ```yaml
 services:
   app:
-    image: ghcr.io/thomas-lg/digestarr:latest
+    image: ghcr.io/thomas-lg-lab/digestarr:latest
     volumes:
       - ./configs:/app/configs:ro
       - ./secrets:/run/secrets:ro
