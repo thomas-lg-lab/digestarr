@@ -1,0 +1,168 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Repository config. Only the managers listed here run: pip_requirements and pep621 are deliberately left out so pyproject.toml and the lockfiles are only ever changed through pip-compile (see thomas-lg/digestarr#174).",
+  "extends": [
+    "config:recommended"
+  ],
+  "baseBranches": [
+    "develop"
+  ],
+  "enabledManagers": [
+    "pip-compile",
+    "dockerfile",
+    "docker-compose",
+    "devcontainer",
+    "github-actions",
+    "pyenv",
+    "custom.regex"
+  ],
+  "pip-compile": {
+    "managerFilePatterns": [
+      "/^requirements\\.txt$/",
+      "/^requirements-dev\\.txt$/"
+    ]
+  },
+  "schedule": [
+    "before 6am on monday"
+  ],
+  "timezone": "Europe/Paris",
+  "prHourlyLimit": 0,
+  "prConcurrentLimit": 10,
+  "dependencyDashboard": true,
+  "semanticCommits": "enabled",
+  "semanticCommitType": "deps",
+  "semanticCommitScope": "",
+  "labels": [
+    "dependencies"
+  ],
+  "rangeStrategy": "bump",
+  "automergeType": "pr",
+  "automergeStrategy": "squash",
+  "platformAutomerge": true,
+  "lockFileMaintenance": {
+    "enabled": true,
+    "schedule": [
+      "before 6am on monday"
+    ],
+    "automerge": false,
+    "commitMessageAction": "refresh",
+    "commitMessageTopic": "pip-compile lockfiles",
+    "description": "Refreshes transitive pins, which can cross a major version within the open constraints: reviewed by hand, unlike direct patch and minor bumps."
+  },
+  "packageRules": [
+    {
+      "description": "pyproject.toml is also where requires-python and the build backend live; neither is a lockfile dependency, so leave them to humans.",
+      "matchManagers": [
+        "pip-compile"
+      ],
+      "matchDepTypes": [
+        "requires-python",
+        "build-system.requires"
+      ],
+      "enabled": false
+    },
+    {
+      "matchManagers": [
+        "pip-compile"
+      ],
+      "addLabels": [
+        "python"
+      ]
+    },
+    {
+      "matchManagers": [
+        "dockerfile",
+        "docker-compose",
+        "devcontainer",
+        "pyenv"
+      ],
+      "addLabels": [
+        "docker"
+      ]
+    },
+    {
+      "matchManagers": [
+        "github-actions"
+      ],
+      "addLabels": [
+        "github-actions"
+      ]
+    },
+    {
+      "description": "Patch and minor land on develop by themselves, majors wait for a human.",
+      "matchUpdateTypes": [
+        "minor",
+        "patch",
+        "pin",
+        "pinDigest",
+        "digest"
+      ],
+      "automerge": true
+    },
+    {
+      "matchManagers": [
+        "pip-compile",
+        "custom.regex"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "python-minor-patch",
+      "matchPackageNames": [
+        "!python"
+      ]
+    },
+    {
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchUpdateTypes": [
+        "minor",
+        "patch"
+      ],
+      "groupName": "github-actions"
+    },
+    {
+      "description": "A new Python minor is a runtime upgrade, not a routine bump: review it by hand even though semver calls it minor. One PR for every place that names it (both Dockerfiles, docker-compose.dev.yml, .python-version).",
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "python"
+      ],
+      "automerge": false,
+      "groupName": "python runtime"
+    }
+  ],
+  "constraints": {
+    "pipTools": "==7.6.2"
+  },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "The pip-tools Renovate compiles with (constraints.pipTools above) must match the one pinned in requirements-dev.txt, which the CI lockfile check uses; this keeps the constraint moving with the pin, in the same python-minor-patch PR.",
+      "managerFilePatterns": [
+        "/^renovate\\.json$/"
+      ],
+      "matchStrings": [
+        "\"pipTools\": \"==(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "pip-tools",
+      "datasourceTemplate": "pypi",
+      "versioningTemplate": "pep440"
+    },
+    {
+      "customType": "regex",
+      "description": "Default Python image of the dev compose file, kept in step with .devcontainer/Dockerfile.dev and the production Dockerfile.",
+      "managerFilePatterns": [
+        "/^docker-compose\\.dev\\.yml$/"
+      ],
+      "matchStrings": [
+        "PYTHON_VERSION:-(?<currentValue>[^}\"]+)\\}"
+      ],
+      "depNameTemplate": "python",
+      "datasourceTemplate": "docker"
+    }
+  ]
+}
