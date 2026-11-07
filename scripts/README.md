@@ -70,7 +70,9 @@ Recompile `requirements.txt` and `requirements-dev.txt`.
 
 Dependency constraints live in `pyproject.toml`: `[project] dependencies` for the
 runtime lock, plus the `dev` extra for the dev lock. Run this after changing them and
-commit the updated lockfiles. Renovate runs the same script on its own PRs.
+commit the updated lockfiles. Renovate does not run this script: its pip-compile
+manager replays the command written in each lockfile header, so any option changed
+here must show up in those headers too (rerun the script and commit).
 
 ```bash
 ./scripts/compile-deps.sh

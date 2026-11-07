@@ -12,7 +12,9 @@
     "dockerfile",
     "docker-compose",
     "devcontainer",
-    "github-actions"
+    "github-actions",
+    "pyenv",
+    "custom.regex"
   ],
   "pip-compile": {
     "managerFilePatterns": [
@@ -42,9 +44,10 @@
     "schedule": [
       "before 6am on monday"
     ],
-    "automerge": true,
+    "automerge": false,
     "commitMessageAction": "refresh",
-    "commitMessageTopic": "pip-compile lockfiles"
+    "commitMessageTopic": "pip-compile lockfiles",
+    "description": "Refreshes transitive pins, which can cross a major version within the open constraints: reviewed by hand, unlike direct patch and minor bumps."
   },
   "packageRules": [
     {
@@ -70,7 +73,8 @@
       "matchManagers": [
         "dockerfile",
         "docker-compose",
-        "devcontainer"
+        "devcontainer",
+        "pyenv"
       ],
       "addLabels": [
         "docker"
@@ -97,13 +101,17 @@
     },
     {
       "matchManagers": [
-        "pip-compile"
+        "pip-compile",
+        "custom.regex"
       ],
       "matchUpdateTypes": [
         "minor",
         "patch"
       ],
-      "groupName": "python-minor-patch"
+      "groupName": "python-minor-patch",
+      "matchPackageNames": [
+        "!python"
+      ]
     },
     {
       "matchManagers": [
@@ -116,14 +124,45 @@
       "groupName": "github-actions"
     },
     {
-      "description": "A new Python minor is a runtime upgrade, not a routine bump: review it by hand even though semver calls it minor.",
+      "description": "A new Python minor is a runtime upgrade, not a routine bump: review it by hand even though semver calls it minor. One PR for every place that names it (both Dockerfiles, docker-compose.dev.yml, .python-version).",
       "matchDatasources": [
         "docker"
       ],
       "matchPackageNames": [
         "python"
       ],
-      "automerge": false
+      "automerge": false,
+      "groupName": "python runtime"
+    }
+  ],
+  "constraints": {
+    "pipTools": "==7.6.2"
+  },
+  "customManagers": [
+    {
+      "customType": "regex",
+      "description": "The pip-tools Renovate compiles with (constraints.pipTools above) must match the one pinned in requirements-dev.txt, which the CI lockfile check uses; this keeps the constraint moving with the pin, in the same python-minor-patch PR.",
+      "managerFilePatterns": [
+        "/^renovate\\.json$/"
+      ],
+      "matchStrings": [
+        "\"pipTools\": \"==(?<currentValue>[^\"]+)\""
+      ],
+      "depNameTemplate": "pip-tools",
+      "datasourceTemplate": "pypi",
+      "versioningTemplate": "pep440"
+    },
+    {
+      "customType": "regex",
+      "description": "Default Python image of the dev compose file, kept in step with .devcontainer/Dockerfile.dev and the production Dockerfile.",
+      "managerFilePatterns": [
+        "/^docker-compose\\.dev\\.yml$/"
+      ],
+      "matchStrings": [
+        "PYTHON_VERSION:-(?<currentValue>[^}\"]+)\\}"
+      ],
+      "depNameTemplate": "python",
+      "datasourceTemplate": "docker"
     }
   ]
 }

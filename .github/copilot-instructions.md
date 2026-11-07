@@ -68,7 +68,7 @@ feature/* ──► develop ──► release/* ──► main
 - Runtime deps: `[project] dependencies` in `pyproject.toml` → compiled to `requirements.txt`
 - Dev deps: the `dev` extra in `pyproject.toml` (dev tooling only; it inherits the runtime deps) → compiled to `requirements-dev.txt`
 - `pyproject.toml` is the single source of truth for constraints; the lockfiles are generated, never edited by hand
-- Renovate recompiles the lockfiles on its own PRs with `scripts/compile-deps.sh` (`renovate.json`)
+- Renovate recompiles the lockfiles on its own PRs with its pip-compile manager, which replays the command in each lockfile header; it does not run `scripts/compile-deps.sh`, so keep the script's options and those headers in step
 - After changing dependencies in `pyproject.toml`, regenerate and commit the lockfiles:
   ```bash
   ./scripts/compile-deps.sh

@@ -17,7 +17,9 @@ name: Renovate
 
 on:
   schedule:
-    - cron: "0 3 * * *"
+    # 01:00 UTC is 02:00 or 03:00 in Paris: three hours of margin before the
+    # "before 6am on monday" window closes, for GitHub's scheduled-run delays.
+    - cron: "0 1 * * *"
   workflow_dispatch:
     inputs:
       dryRun:
@@ -47,8 +49,6 @@ jobs:
         with:
           app-id: ${{ secrets.RENOVATE_APP_ID }}
           private-key: ${{ secrets.RENOVATE_APP_PRIVATE_KEY }}
-
-      - uses: actions/checkout@v7
 
       - name: Run Renovate
         uses: renovatebot/github-action@v46
