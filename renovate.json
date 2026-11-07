@@ -4,7 +4,7 @@
   "extends": [
     "config:recommended"
   ],
-  "baseBranches": [
+  "baseBranchPatterns": [
     "develop"
   ],
   "enabledManagers": [
@@ -46,7 +46,6 @@
     ],
     "automerge": false,
     "commitMessageAction": "refresh",
-    "commitMessageTopic": "pip-compile lockfiles",
     "description": "Refreshes transitive pins, which can cross a major version within the open constraints: reviewed by hand, unlike direct patch and minor bumps."
   },
   "packageRules": [
@@ -133,6 +132,13 @@
       ],
       "automerge": false,
       "groupName": "python runtime"
+    },
+    {
+      "description": "config:recommended types non-production dependencies as chore (:semanticPrefixFixDepsChoreOthers); every update here is a dependency bump, so keep the deps prefix that the PR title check, the labels and the release notes expect.",
+      "matchPackageNames": [
+        "*"
+      ],
+      "semanticCommitType": "deps"
     }
   ],
   "constraints": {
