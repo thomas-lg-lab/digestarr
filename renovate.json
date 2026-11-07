@@ -58,6 +58,16 @@
       "automerge": true
     },
     {
+      "description": "A digest update on an action keeps the version and moves its commit: that is what a re-pointed (hijacked) tag looks like, and the release-age guard does not cover it. A human reads those.",
+      "matchManagers": [
+        "github-actions"
+      ],
+      "matchUpdateTypes": [
+        "digest"
+      ],
+      "automerge": false
+    },
+    {
       "matchManagers": [
         "pip-compile",
         "custom.regex"
@@ -78,6 +88,10 @@
       ],
       "matchPackageNames": [
         "python"
+      ],
+      "matchUpdateTypes": [
+        "major",
+        "minor"
       ],
       "automerge": false,
       "groupName": "python runtime"
