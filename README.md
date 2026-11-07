@@ -17,6 +17,7 @@
   <a href="https://mypy-lang.org/"><img src="https://www.mypy-lang.org/static/mypy_badge.svg" alt="Checked with mypy"/></a>
   <!-- Security & Maintenance -->
   <a href="https://github.com/thomas-lg/digestarr/security"><img src="https://img.shields.io/badge/security-trivy-1904DA?logo=aquasecurity&logoColor=white" alt="Security: Trivy"/></a>
+  <a href="https://scorecard.dev/viewer/?uri=github.com/thomas-lg/digestarr"><img src="https://api.scorecard.dev/projects/github.com/thomas-lg/digestarr/badge" alt="OpenSSF Scorecard"/></a>
   <a href="https://github.com/thomas-lg/digestarr/issues?q=is%3Aissue+is%3Aopen+%22Dependency+Dashboard%22"><img src="https://img.shields.io/badge/renovate-enabled-1A1F6C?logo=renovatebot&logoColor=white" alt="Renovate"/></a>
   <!-- License -->
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-brightgreen?logo=opensourceinitiative&logoColor=white" alt="License: MIT"/></a>
