@@ -5,9 +5,9 @@ FROM python:${PYTHON_VERSION}
 LABEL org.opencontainers.image.title="Digestarr (Dev)"
 LABEL org.opencontainers.image.description="Development container for Digestarr — includes dev dependencies, linting, and test tooling"
 LABEL org.opencontainers.image.authors="thomas-lg"
-LABEL org.opencontainers.image.url="https://github.com/thomas-lg/digestarr"
-LABEL org.opencontainers.image.source="https://github.com/thomas-lg/digestarr"
-LABEL org.opencontainers.image.documentation="https://github.com/thomas-lg/digestarr/blob/main/CONTRIBUTING.md"
+LABEL org.opencontainers.image.url="https://github.com/thomas-lg-lab/digestarr"
+LABEL org.opencontainers.image.source="https://github.com/thomas-lg-lab/digestarr"
+LABEL org.opencontainers.image.documentation="https://github.com/thomas-lg-lab/digestarr/blob/main/CONTRIBUTING.md"
 LABEL org.opencontainers.image.licenses="MIT"
 
 WORKDIR /app

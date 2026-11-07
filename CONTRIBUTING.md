@@ -200,7 +200,7 @@ This repository uses two separate workflows for CI/CD and release management:
 - Release drafter: `.github/workflows/draft-release.yml` (draft release notes on push to `main`; publish via `workflow_dispatch`)
 - Deployment example: `docker-compose.yml`
 
-The pipeline gates Docker image publishing on passing quality and test checks. Images are published to `ghcr.io/thomas-lg/digestarr` with the following tags:
+The pipeline gates Docker image publishing on passing quality and test checks. Images are published to `ghcr.io/thomas-lg-lab/digestarr` with the following tags:
 
 | Tag | When |
 | --- | --- |

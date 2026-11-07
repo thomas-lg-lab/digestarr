@@ -1,27 +1,27 @@
 <?xml version="1.0"?>
 <Container version="2">
   <Name>digestarr</Name>
-  <Repository>ghcr.io/thomas-lg/digestarr:latest</Repository>
-  <Registry>https://github.com/thomas-lg/digestarr/pkgs/container/digestarr</Registry>
+  <Repository>ghcr.io/thomas-lg-lab/digestarr:latest</Repository>
+  <Registry>https://github.com/thomas-lg-lab/digestarr/pkgs/container/digestarr</Registry>
   <Network>bridge</Network>
   <MyIP/>
   <Shell>sh</Shell>
   <Privileged>false</Privileged>
-  <Support>https://github.com/thomas-lg/digestarr</Support>
-  <Project>https://github.com/thomas-lg/digestarr</Project>
-  <ReadMe>https://github.com/thomas-lg/digestarr/blob/main/README.md</ReadMe>
-  <Overview>A lightweight container that digests what was recently added to your media library (Plex, Jellyfin or Emby) and sends summaries to Discord. Minimal configuration required - just 3 fields (Media Source, plus that source's URL and API key). Smart defaults: checks last 7 days, runs weekly on Sundays at 4 PM. Supports scheduled (daemon) or one-shot mode. Discord notifications optional. For complete documentation, see https://github.com/thomas-lg/digestarr/blob/main/README.md - For configuration guide, see https://github.com/thomas-lg/digestarr/blob/main/CONFIGURATION.md</Overview>
+  <Support>https://github.com/thomas-lg-lab/digestarr</Support>
+  <Project>https://github.com/thomas-lg-lab/digestarr</Project>
+  <ReadMe>https://github.com/thomas-lg-lab/digestarr/blob/main/README.md</ReadMe>
+  <Overview>A lightweight container that digests what was recently added to your media library (Plex, Jellyfin or Emby) and sends summaries to Discord. Minimal configuration required - just 3 fields (Media Source, plus that source's URL and API key). Smart defaults: checks last 7 days, runs weekly on Sundays at 4 PM. Supports scheduled (daemon) or one-shot mode. Discord notifications optional. For complete documentation, see https://github.com/thomas-lg-lab/digestarr/blob/main/README.md - For configuration guide, see https://github.com/thomas-lg-lab/digestarr/blob/main/CONFIGURATION.md</Overview>
   <Category>MediaServer:Video Tools:Utilities</Category>
   <WebUI/>
   <TemplateURL/>
-  <Icon>https://raw.githubusercontent.com/thomas-lg/digestarr/main/assets/digestarr.png</Icon>
+  <Icon>https://raw.githubusercontent.com/thomas-lg-lab/digestarr/main/assets/digestarr.png</Icon>
   <ExtraParams/>
   <PostArgs/>
   <CPUset/>
   <DateInstalled>1771059298</DateInstalled>
   <DonateText/>
   <DonateLink/>
-  <Requires>Minimal setup: a media source reachable from this container - Tracearr (Plex, Jellyfin or Emby) or Tautulli v2.1.0+ with its API enabled. On first run, config.yml is auto-created from template with environment variable references. Set Media Source below, plus that source's URL and API key. For advanced configuration options and troubleshooting, see https://github.com/thomas-lg/digestarr/blob/main/CONFIGURATION.md</Requires>
+  <Requires>Minimal setup: a media source reachable from this container - Tracearr (Plex, Jellyfin or Emby) or Tautulli v2.1.0+ with its API enabled. On first run, config.yml is auto-created from template with environment variable references. Set Media Source below, plus that source's URL and API key. For advanced configuration options and troubleshooting, see https://github.com/thomas-lg-lab/digestarr/blob/main/CONFIGURATION.md</Requires>
   <Config Name="AppData Config Path" Target="/app/configs" Default="/mnt/user/appdata/digestarr" Mode="rw" Description="Host path for config files. Container target is fixed to /app/configs (do not change). On first run, config.yml is auto-created." Type="Path" Display="always" Required="true" Mask="false">/mnt/user/appdata/digestarr</Config>
   <Config Name="AppData Logs Path" Target="/app/logs" Default="/mnt/user/appdata/digestarr/logs" Mode="rw" Description="Host path for persistent logs. Container target is fixed to /app/logs (do not change)." Type="Path" Display="advanced" Required="false" Mask="false">/mnt/user/appdata/digestarr/logs</Config>
   <Config Name="Secrets" Target="/run/secrets" Default="" Mode="ro" Description="Optional: host directory holding secret files, mounted read-only. Point any API key or the webhook at a file inside it - e.g. set Tautulli API Key to /run/secrets/tautulli_api_key - to keep the value out of the container config. Leave empty if you paste keys in directly. See CONFIGURATION.md, Docker Secrets." Type="Path" Display="advanced" Required="false" Mask="false"/>

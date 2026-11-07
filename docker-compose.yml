@@ -1,6 +1,6 @@
 services:
   app:
-    image: ghcr.io/thomas-lg/digestarr:latest
+    image: ghcr.io/thomas-lg-lab/digestarr:latest
     container_name: digestarr
     volumes:
       - ./configs:/app/configs:rw

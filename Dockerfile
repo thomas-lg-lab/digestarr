@@ -4,9 +4,9 @@ FROM python:3.14-slim
 LABEL org.opencontainers.image.title="Digestarr"
 LABEL org.opencontainers.image.description="Fetches recently added Plex media via Tautulli and posts Discord summaries"
 LABEL org.opencontainers.image.authors="thomas-lg"
-LABEL org.opencontainers.image.url="https://github.com/thomas-lg/digestarr"
-LABEL org.opencontainers.image.source="https://github.com/thomas-lg/digestarr"
-LABEL org.opencontainers.image.documentation="https://github.com/thomas-lg/digestarr#readme"
+LABEL org.opencontainers.image.url="https://github.com/thomas-lg-lab/digestarr"
+LABEL org.opencontainers.image.source="https://github.com/thomas-lg-lab/digestarr"
+LABEL org.opencontainers.image.documentation="https://github.com/thomas-lg-lab/digestarr#readme"
 LABEL org.opencontainers.image.licenses="MIT"
 
 # Prevent Python from writing bytecode files

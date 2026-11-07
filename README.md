@@ -6,19 +6,19 @@
 
 <p align="center">
   <!-- Build & Distribution -->
-  <a href="https://github.com/thomas-lg/digestarr/actions/workflows/ci.yml"><img src="https://github.com/thomas-lg/digestarr/actions/workflows/ci.yml/badge.svg" alt="CI"/></a>
-  <a href="https://github.com/thomas-lg/digestarr/releases/latest"><img src="https://img.shields.io/github/v/release/thomas-lg/digestarr?logo=github&logoColor=white&color=blue" alt="Latest Release"/></a>
-  <a href="https://ghcr.io/thomas-lg/digestarr"><img src="https://img.shields.io/badge/docker-ghcr.io-2496ED?logo=docker&logoColor=white" alt="Docker Image"/></a>
+  <a href="https://github.com/thomas-lg-lab/digestarr/actions/workflows/ci.yml"><img src="https://github.com/thomas-lg-lab/digestarr/actions/workflows/ci.yml/badge.svg" alt="CI"/></a>
+  <a href="https://github.com/thomas-lg-lab/digestarr/releases/latest"><img src="https://img.shields.io/github/v/release/thomas-lg-lab/digestarr?logo=github&logoColor=white&color=blue" alt="Latest Release"/></a>
+  <a href="https://ghcr.io/thomas-lg-lab/digestarr"><img src="https://img.shields.io/badge/docker-ghcr.io-2496ED?logo=docker&logoColor=white" alt="Docker Image"/></a>
   <!-- Code Quality -->
-  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/dynamic/toml?url=https%3A%2F%2Fraw.githubusercontent.com%2Fthomas-lg%2Fdigestarr%2Fmain%2Fpyproject.toml&query=%24.project.requires-python&label=python&logo=python&logoColor=white&color=3776ab" alt="Python Version"/></a>
-  <a href="https://codecov.io/gh/thomas-lg/digestarr"><img src="https://codecov.io/gh/thomas-lg/digestarr/branch/main/graph/badge.svg" alt="Coverage"/></a>
+  <a href="https://www.python.org/"><img src="https://img.shields.io/badge/dynamic/toml?url=https%3A%2F%2Fraw.githubusercontent.com%2Fthomas-lg-lab%2Fdigestarr%2Fmain%2Fpyproject.toml&query=%24.project.requires-python&label=python&logo=python&logoColor=white&color=3776ab" alt="Python Version"/></a>
+  <a href="https://codecov.io/gh/thomas-lg-lab/digestarr"><img src="https://codecov.io/gh/thomas-lg-lab/digestarr/branch/main/graph/badge.svg" alt="Coverage"/></a>
   <a href="https://docs.pydantic.dev/"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/pydantic/pydantic/main/docs/badge/v2.json" alt="Pydantic v2"/></a>
   <a href="https://github.com/astral-sh/ruff"><img src="https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/astral-sh/ruff/main/assets/badge/v2.json" alt="Ruff"/></a>
   <a href="https://mypy-lang.org/"><img src="https://www.mypy-lang.org/static/mypy_badge.svg" alt="Checked with mypy"/></a>
   <!-- Security & Maintenance -->
-  <a href="https://github.com/thomas-lg/digestarr/security"><img src="https://img.shields.io/badge/security-trivy-1904DA?logo=aquasecurity&logoColor=white" alt="Security: Trivy"/></a>
-  <a href="https://scorecard.dev/viewer/?uri=github.com/thomas-lg/digestarr"><img src="https://api.scorecard.dev/projects/github.com/thomas-lg/digestarr/badge" alt="OpenSSF Scorecard"/></a>
-  <a href="https://github.com/thomas-lg/digestarr/issues?q=is%3Aissue+is%3Aopen+%22Dependency+Dashboard%22"><img src="https://img.shields.io/badge/renovate-enabled-1A1F6C?logo=renovatebot&logoColor=white" alt="Renovate"/></a>
+  <a href="https://github.com/thomas-lg-lab/digestarr/security"><img src="https://img.shields.io/badge/security-trivy-1904DA?logo=aquasecurity&logoColor=white" alt="Security: Trivy"/></a>
+  <a href="https://scorecard.dev/viewer/?uri=github.com/thomas-lg-lab/digestarr"><img src="https://api.scorecard.dev/projects/github.com/thomas-lg-lab/digestarr/badge" alt="OpenSSF Scorecard"/></a>
+  <a href="https://github.com/thomas-lg-lab/digestarr/issues?q=is%3Aissue+is%3Aopen+%22Dependency+Dashboard%22"><img src="https://img.shields.io/badge/renovate-enabled-1A1F6C?logo=renovatebot&logoColor=white" alt="Renovate"/></a>
   <!-- License -->
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-brightgreen?logo=opensourceinitiative&logoColor=white" alt="License: MIT"/></a>
 </p>
@@ -93,7 +93,7 @@ Minimal configuration required - just 3 fields!
 **Clone the repository:**
 
 ```bash
-git clone https://github.com/thomas-lg/digestarr.git
+git clone https://github.com/thomas-lg-lab/digestarr.git
 cd digestarr
 ```
 
@@ -356,7 +356,7 @@ Script reference: [scripts/README.md](scripts/README.md)
 
 ## Docker Images
 
-Pre-built images available: `ghcr.io/thomas-lg/digestarr`
+Pre-built images available: `ghcr.io/thomas-lg-lab/digestarr`
 
 | Tag | Description |
 | --- | --- |
@@ -366,8 +366,8 @@ Pre-built images available: `ghcr.io/thomas-lg/digestarr`
 | `sha-<shortsha>` | Exact commit build from `main` (short commit SHA) |
 
 ```bash
-docker pull ghcr.io/thomas-lg/digestarr:latest
-docker pull ghcr.io/thomas-lg/digestarr:edge
+docker pull ghcr.io/thomas-lg-lab/digestarr:latest
+docker pull ghcr.io/thomas-lg-lab/digestarr:edge
 ```
 
 ## Deployment Options
