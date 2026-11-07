@@ -35,6 +35,7 @@ jobs:
         permissions:
             contents: write
             pull-requests: read
+            actions: write # dispatch ci.yml on the tag a publish creates
 
         steps:
             - name: Publish Release
@@ -43,3 +44,12 @@ jobs:
                   config-name: release-drafter.yml
                   publish: ${{ github.event.inputs.dry_run == 'false' }}
                   token: ${{ secrets.GITHUB_TOKEN }}
+              id: drafter
+            # The tag this publish created was pushed with GITHUB_TOKEN, which starts no
+            # workflow, so ci.yml would never build the release. Dispatch it on the tag.
+            - name: Build and push the release image
+              if: github.event.inputs.dry_run == 'false'
+              env:
+                  GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                  TAG: ${{ steps.drafter.outputs.tag_name }}
+              run: gh workflow run ci.yml --repo "$GITHUB_REPOSITORY" --ref "$TAG"

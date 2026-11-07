@@ -359,14 +359,14 @@ Pre-built images available: `ghcr.io/thomas-lg/digestarr`
 
 | Tag | Description |
 | --- | --- |
-| `latest` | Latest stable build from `main` |
-| `develop` | Latest build from `develop` branch |
+| `latest` | Latest published release |
+| `edge` | Latest build from `main` (every merge) |
 | `vX.Y.Z` | Specific release version |
 | `sha-<shortsha>` | Exact commit build from `main` (short commit SHA) |
 
 ```bash
 docker pull ghcr.io/thomas-lg/digestarr:latest
-docker pull ghcr.io/thomas-lg/digestarr:develop
+docker pull ghcr.io/thomas-lg/digestarr:edge
 ```
 
 ## Deployment Options
@@ -399,7 +399,7 @@ docker exec <container> curl -s http://127.0.0.1:8080/health
 ```
 
 `last_run` is `null` until the first run completes. `version` is the image tag
-(`3.1.1`, `develop`, `latest`; `unknown` outside a built image or installed package)
+(`3.1.1`, `edge`; `unknown` outside a built image or installed package)
 and `uptime_seconds` counts whole seconds since the process started.
 
 To let an **external monitor** (Uptime Kuma, Gatus, ...) poll it, also set

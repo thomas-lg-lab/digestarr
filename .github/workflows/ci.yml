@@ -2,7 +2,7 @@ name: CI & Release
 
 on:
   push:
-    branches: [main, develop]
+    branches: [main]
     tags: ["v*"]
     paths-ignore:
       - "**.md"
@@ -13,13 +13,16 @@ on:
       - ".github/ISSUE_TEMPLATE/**"
       - ".github/conventional-commit-types.json"
       - "renovate.json"
-  # No paths-ignore here on purpose. The ruleset on main and develop requires
+  # No paths-ignore here on purpose. The ruleset on main requires
   # build-and-push, tests and quality; a workflow skipped by path filtering never
   # reports those checks, so they stay pending forever and the PR can never merge.
   # Docs- and asset-only PRs therefore run the full suite, which costs a couple of
   # minutes and confirms they broke nothing.
   pull_request:
-    branches: [main, develop]
+    branches: [main]
+  # A release published by draft-release.yml creates its tag with GITHUB_TOKEN, which
+  # starts no workflow: that job dispatches this one on the tag instead.
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -192,12 +195,10 @@ jobs:
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
-            # Tag as 'latest' for pushes to main.
-            # Not {{is_default_branch}}: the default branch is develop, so that would
-            # put 'latest' on the integration builds every user pulls by default.
-            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
-            # Tag as 'develop' for pushes to develop
-            type=raw,value=develop,enable=${{ github.ref == 'refs/heads/develop' }}
+            # Merging is not releasing: main builds 'edge', only a published release
+            # (a v* tag) moves 'latest', which is what users pull by default.
+            type=raw,value=edge,enable=${{ github.ref == 'refs/heads/main' }}
+            type=raw,value=latest,enable=${{ startsWith(github.ref, 'refs/tags/v') }}
             # Tag as version for tags like v1.0.0
             type=semver,pattern={{version}}
             type=semver,pattern={{major}}.{{minor}}

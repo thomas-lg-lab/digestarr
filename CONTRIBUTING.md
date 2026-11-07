@@ -19,35 +19,28 @@ Thank you for contributing to Digestarr.
 
 ## Branching Strategy
 
-This repository uses a structured Git flow:
+This repository is trunk-based: `main` is the only long-lived branch, and merging is not releasing.
 
 ```text
-feature/* ──► develop ──► release/* ──► main
-                ▲                        │
-                └──── nightly sync ◄─────┘
+feature/* ──► main ──(publish a release, tag vX.Y.Z)──► latest image
 ```
 
-| Branch | Purpose | Merges into |
+| Branch / tag | Purpose | Docker image |
 | --- | --- | --- |
-| `feature/*` | New features and fixes | `develop` |
-| `develop` | Integration branch, builds `develop` Docker image | `release/*` |
-| `release/*` | Release preparation | `main` |
-| `main` | Stable production branch, builds `latest` Docker image | — |
+| `feature/*`, `fix/*`, … | Short-lived work, one squash PR into `main` | — |
+| `main` | Integration, always releasable | `edge` |
+| `vX.Y.Z` tag | A release: publish the draft release on GitHub | `latest`, `X.Y.Z`, `X.Y`, `X` |
 
-**Release branches** use the `release/<name>` convention — preferably date-based (e.g. `release/2026-02-22`) or version-based (e.g. `release/1.0`). The tag version (`vX.Y.Z`) is computed automatically by release-drafter from merged PR labels; confirm or adjust it when publishing the draft release on GitHub.
+**Releasing**: release-drafter keeps a draft release up to date from merged PR labels and computes the version; confirm or adjust it and publish the draft (on GitHub, or Actions → Draft Release → Run workflow). That tag is what moves `latest`.
 
-**Hotfixes** use a `hotfix/<short-description>` branch cut from `main`, opened as a PR targeting `main`. Follow the same conventional commit title and labeling rules as normal PRs (see [Pull Request Process](#pull-request-process)), applying the `hotfix` label if it exists. The nightly sync backports `main` → `develop` automatically at 02:00 UTC; conflicts open a PR targeting `develop` for manual resolution.
-
-> **Repository setup required:** the nightly sync needs a `SYNC_TOKEN` repository secret (fine-grained PAT with "Contents: Read & Write" and "Pull requests: Read & Write" scopes) to push directly to the protected `develop` branch. See the prerequisites comment at the top of [`.github/workflows/sync-develop.yml`](.github/workflows/sync-develop.yml) for details.
-
-**Renovate** PRs target `develop` and flow through the normal release process. Patch and minor updates merge on their own once the checks pass; majors wait for a review.
+**Renovate** PRs target `main`. Patch and minor updates merge on their own once the checks pass, which only moves `edge`; majors wait for a review.
 
 ## Getting Started
 
 1. Fork the repository
 2. Clone your fork locally
-3. Create a `feature/*` branch from `develop`
-4. Make your changes and open a pull request targeting `develop`
+3. Create a `feature/*` branch from `main`
+4. Make your changes and open a pull request targeting `main`
 
 ## Development Setup
 
@@ -211,8 +204,8 @@ The pipeline gates Docker image publishing on passing quality and test checks. I
 
 | Tag | When |
 | --- | --- |
-| `latest` | Push to `main` |
-| `develop` | Push to `develop` |
+| `edge` | Push to `main` |
+| `latest` | Published release (`v*` tag) |
 | `vX.Y.Z` | Version tag (`v*`) |
 | `sha-<shortsha>` | Push to `main` (traceability; short commit SHA) |
 
