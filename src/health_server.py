@@ -11,8 +11,11 @@ enabled, so it adds no network exposure out of the box.
 import json
 import logging
 import threading
+import time
 from datetime import UTC, datetime
 from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
+
+from version import get_app_version
 
 logger = logging.getLogger(__name__)
 
@@ -20,6 +23,14 @@ HEALTH_PATH = "/health"
 
 _state_lock = threading.Lock()
 _last_run: str | None = None
+# Monotonic clock so uptime is immune to wall-clock adjustments; the module is
+# imported at process start, which is close enough to "process uptime".
+_started_monotonic = time.monotonic()
+
+
+def get_uptime_seconds() -> int:
+    """Return whole seconds elapsed since the process imported this module."""
+    return int(time.monotonic() - _started_monotonic)
 
 
 def record_run_completed(when: datetime | None = None) -> None:
@@ -64,7 +75,14 @@ class _HealthRequestHandler(BaseHTTPRequestHandler):
             self.send_error(404)
             return
 
-        body = json.dumps({"status": "ok", "last_run": get_last_run()}).encode()
+        body = json.dumps(
+            {
+                "status": "ok",
+                "version": get_app_version(),
+                "uptime_seconds": get_uptime_seconds(),
+                "last_run": get_last_run(),
+            }
+        ).encode()
         self.send_response(200)
         self.send_header("Content-Type", "application/json")
         self.send_header("Content-Length", str(len(body)))

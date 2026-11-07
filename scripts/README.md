@@ -35,12 +35,13 @@ Required environment variables for default config placeholders:
 
 ### 🧪 `test.sh` - Run Tests
 
-Run pytest with coverage.
+Run pytest with coverage, the way CI does. When Docker is available the suite runs inside the `digestarr-devcontainer` image (rebuilt from `.devcontainer/Dockerfile.dev` on every run; the layer cache makes that a couple of seconds and picks up lockfile changes); inside the devcontainer, or without Docker, it uses the local interpreter.
 
 ```bash
 ./scripts/test.sh                           # Run default test suite + coverage
 ./scripts/test.sh tests/test_config.py      # Run specific test file
 ./scripts/test.sh -k "test_config"          # Run tests matching pattern
+DIGESTARR_TEST_RUNNER=local ./scripts/test.sh   # Force the local interpreter (docker|local)
 ```
 
 ### 🎨 `format.sh` - Format and Lint
@@ -67,11 +68,11 @@ Run mypy.
 
 Recompile `requirements.txt` and `requirements-dev.txt`.
 
-Runtime constraints live in `requirements.in`, which `pyproject.toml` reads via
-`[tool.setuptools.dynamic]`; `requirements-dev.in` adds dev-only tooling on top and
-pulls `requirements.in` in with `-r`. Each lock is compiled from exactly one `.in`
-file — see the header of `compile-deps.sh` before changing that. Run this after
-modifying either input and commit the updated lockfiles.
+Dependency constraints live in `pyproject.toml`: `[project] dependencies` for the
+runtime lock, plus the `dev` extra for the dev lock. Run this after changing them and
+commit the updated lockfiles. Renovate does not run this script: its pip-compile
+manager replays the command written in each lockfile header, so any option changed
+here must show up in those headers too (rerun the script and commit).
 
 ```bash
 ./scripts/compile-deps.sh

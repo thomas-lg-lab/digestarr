@@ -78,6 +78,20 @@ class TestResolveValue:
         assert _resolve_value(fake_path) == fake_path
 
     @pytest.mark.unit
+    def test_resolve_relative_path_is_literal(self, tmp_path, monkeypatch):
+        """Relative paths are never read as secret files, even if such a file exists."""
+        monkeypatch.chdir(tmp_path)
+        (tmp_path / "secret").write_text("should_not_be_read")
+        assert _resolve_value("secret") == "secret"
+
+    @pytest.mark.unit
+    def test_resolve_native_absolute_path(self, tmp_path):
+        """Platform-native absolute paths (drive-absolute on Windows) are read like POSIX ones."""
+        secret_file = tmp_path / "native_secret"
+        secret_file.write_text("native_value\n")
+        assert _resolve_value(str(secret_file)) == "native_value"
+
+    @pytest.mark.unit
     def test_resolve_dict_recursively(self):
         """Test recursive resolution in dictionaries."""
         with tempfile.NamedTemporaryFile(mode="w", delete=False) as f:

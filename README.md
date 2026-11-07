@@ -17,7 +17,8 @@
   <a href="https://mypy-lang.org/"><img src="https://www.mypy-lang.org/static/mypy_badge.svg" alt="Checked with mypy"/></a>
   <!-- Security & Maintenance -->
   <a href="https://github.com/thomas-lg/digestarr/security"><img src="https://img.shields.io/badge/security-trivy-1904DA?logo=aquasecurity&logoColor=white" alt="Security: Trivy"/></a>
-  <a href="https://github.com/thomas-lg/digestarr/network/updates"><img src="https://img.shields.io/badge/dependabot-enabled-025E8C?logo=dependabot&logoColor=white" alt="Dependabot"/></a>
+  <a href="https://scorecard.dev/viewer/?uri=github.com/thomas-lg/digestarr"><img src="https://api.scorecard.dev/projects/github.com/thomas-lg/digestarr/badge" alt="OpenSSF Scorecard"/></a>
+  <a href="https://github.com/thomas-lg/digestarr/issues?q=is%3Aissue+is%3Aopen+%22Dependency+Dashboard%22"><img src="https://img.shields.io/badge/renovate-enabled-1A1F6C?logo=renovatebot&logoColor=white" alt="Renovate"/></a>
   <!-- License -->
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-brightgreen?logo=opensourceinitiative&logoColor=white" alt="License: MIT"/></a>
 </p>
@@ -306,7 +307,8 @@ Script reference: [scripts/README.md](scripts/README.md)
 │   ├── scheduler.py # APScheduler daemon mode
 │   ├── media_source.py # Backend-neutral media source contract
 │   ├── tautulli_client.py # Tautulli API client
-│   └── tracearr_client.py # Tracearr API client
+│   ├── tracearr_client.py # Tracearr API client
+│   └── version.py # Application version resolution
 ├── tests/ # Test suite
 │   ├── test_app.py # App logic tests
 │   ├── test_config.py # Configuration tests
@@ -318,10 +320,11 @@ Script reference: [scripts/README.md](scripts/README.md)
 │   ├── test_logging_config.py # Logging config tests
 │   ├── test_scheduler.py # Scheduler tests
 │   ├── test_tautulli_client.py # Tautulli client tests
-│   └── test_tracearr_client.py # Tracearr client tests
+│   ├── test_tracearr_client.py # Tracearr client tests
+│   └── test_version.py # Version resolution tests
 ├── scripts/ # Helper scripts
 │   ├── clean.sh # Clean up caches
-│   ├── compile-deps.sh # Regenerate lockfiles from requirements files
+│   ├── compile-deps.sh # Regenerate lockfiles from pyproject.toml
 │   ├── dev-container-shell.sh # Enter dev container shell
 │   ├── format.sh # Format Python code
 │   ├── healthcheck.py # Docker HEALTHCHECK probe
@@ -344,9 +347,7 @@ Script reference: [scripts/README.md](scripts/README.md)
 ├── docker-compose.yml # Production compose config
 ├── entrypoint.sh # Container entrypoint script
 ├── my-digestarr.xml # Unraid template
-├── pyproject.toml # Python project configuration
-├── requirements.in # Runtime dependencies (read by pyproject.toml, source of truth)
-├── requirements-dev.in # Development & testing dependencies
+├── pyproject.toml # Python project configuration and dependency constraints
 ├── requirements-dev.txt # Compiled lockfile for dev dependencies
 ├── requirements.txt # Compiled lockfile for runtime dependencies
 └── README.md
@@ -359,14 +360,14 @@ Pre-built images available: `ghcr.io/thomas-lg/digestarr`
 
 | Tag | Description |
 | --- | --- |
-| `latest` | Latest stable build from `main` |
-| `develop` | Latest build from `develop` branch |
+| `latest` | Latest published release |
+| `edge` | Latest build from `main` (every merge) |
 | `vX.Y.Z` | Specific release version |
 | `sha-<shortsha>` | Exact commit build from `main` (short commit SHA) |
 
 ```bash
 docker pull ghcr.io/thomas-lg/digestarr:latest
-docker pull ghcr.io/thomas-lg/digestarr:develop
+docker pull ghcr.io/thomas-lg/digestarr:edge
 ```
 
 ## Deployment Options
@@ -395,10 +396,12 @@ environment:
 
 ```bash
 docker exec <container> curl -s http://127.0.0.1:8080/health
-# {"status": "ok", "last_run": "2026-08-31T16:00:03+00:00"}
+# {"status": "ok", "version": "3.1.1", "uptime_seconds": 86412, "last_run": "2026-08-31T16:00:03+00:00"}
 ```
 
-`last_run` is `null` until the first run completes.
+`last_run` is `null` until the first run completes. `version` is the image tag
+(`3.1.1`, `edge`; `unknown` outside a built image or installed package)
+and `uptime_seconds` counts whole seconds since the process started.
 
 To let an **external monitor** (Uptime Kuma, Gatus, ...) poll it, also set
 `HEALTH_HOST=0.0.0.0` — binding loopback only is the default and is not reachable from

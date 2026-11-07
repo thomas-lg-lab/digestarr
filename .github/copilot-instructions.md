@@ -29,6 +29,7 @@ src/
   scheduler.py         # APScheduler wrapper
   health_server.py     # Optional GET /health endpoint (scheduled mode only)
   logging_config.py    # Logging setup
+  version.py           # Version resolution (APP_VERSION, package metadata, "unknown")
 tests/
   test_*.py            # Unit tests (pytest markers: unit, integration)
 ```
@@ -36,13 +37,12 @@ tests/
 ## Branching Strategy
 
 ```
-feature/* ──► develop ──► release/* ──► main
+feature/* ──► main ──(published release, tag vX.Y.Z)──► latest
 ```
 
-- New work targets `develop` via `feature/*` branches
-- `main` is the stable production branch (builds `latest` Docker image)
-- Hotfixes use `hotfix/<description>` branched from `main`
-- Dependabot PRs target `develop`
+- Trunk-based: short-lived branches, one squash PR into `main`; `main` builds the `edge` image
+- Only a published release (a `v*` tag) builds `latest`
+- Renovate PRs target `main`
 
 ## Code Style
 
@@ -55,18 +55,20 @@ feature/* ──► develop ──► release/* ──► main
 
 ## Testing
 
-- Run all tests: `./scripts/test.sh`
+- Run all tests: `./scripts/test.sh` (pass pytest arguments through, e.g. `./scripts/test.sh tests/test_config.py -k secrets`)
+- `scripts/test.sh` mirrors CI: when Docker is available it runs pytest inside the `digestarr-devcontainer` image (rebuilt from `.devcontainer/Dockerfile.dev` on every run, cached, so lockfile changes are picked up; Linux + the Python of `.python-version`); inside the devcontainer, or without Docker, it falls back to the local interpreter. Force a runner with `DIGESTARR_TEST_RUNNER=docker|local`
+- Only the Docker runner is authoritative: a host interpreter may differ in Python version and platform (the project targets 3.14, see `.python-version`)
 - Unit tests mock at the class level; integration tests mock only at the HTTP boundary
 - Mark tests with `@pytest.mark.unit` or `@pytest.mark.integration`
 - All new behaviour must be covered by tests
 
 ## Dependency / Lockfile Management
 
-- Runtime deps: declared in `requirements.in` → compiled to `requirements.txt`
-- Dev deps: `requirements-dev.in` (dev tooling only, pulls `requirements.in` in with `-r`) → compiled to `requirements-dev.txt`
-- `requirements.in` is the single source of truth for runtime constraints — `pyproject.toml` reads it via `[tool.setuptools.dynamic]`, so never duplicate them there
-- Each lock has exactly one `.in` input, which is what lets Dependabot recompile it; see the header of `scripts/compile-deps.sh` before changing this layout
-- After changing `requirements.in` or `requirements-dev.in`, regenerate and commit the lockfiles:
+- Runtime deps: `[project] dependencies` in `pyproject.toml` → compiled to `requirements.txt`
+- Dev deps: the `dev` extra in `pyproject.toml` (dev tooling only; it inherits the runtime deps) → compiled to `requirements-dev.txt`
+- `pyproject.toml` is the single source of truth for constraints; the lockfiles are generated, never edited by hand
+- Renovate recompiles the lockfiles on its own PRs with its pip-compile manager, which replays the command in each lockfile header; it does not run `scripts/compile-deps.sh`, so keep the script's options and those headers in step
+- After changing dependencies in `pyproject.toml`, regenerate and commit the lockfiles:
   ```bash
   ./scripts/compile-deps.sh
   ```

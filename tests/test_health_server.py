@@ -9,6 +9,7 @@ import pytest
 
 from src.health_server import (
     get_last_run,
+    get_uptime_seconds,
     record_run_completed,
     reset_state,
     start_health_server,
@@ -36,14 +37,16 @@ class TestHealthEndpoint:
     """Tests for the served responses."""
 
     @pytest.mark.unit
-    def test_health_returns_ok_with_null_last_run(self, health_server):
+    def test_health_returns_ok_with_null_last_run(self, health_server, monkeypatch):
         """Before any run completes, last_run must be null rather than absent."""
+        monkeypatch.setenv("APP_VERSION", "0.0.0-test")
         with _get(health_server, "/health") as response:
             assert response.status == 200
             assert response.headers["Content-Type"] == "application/json"
             payload = json.loads(response.read())
 
-        assert payload == {"status": "ok", "last_run": None}
+        assert isinstance(payload.pop("uptime_seconds"), int)
+        assert payload == {"status": "ok", "version": "0.0.0-test", "last_run": None}
 
     @pytest.mark.unit
     def test_health_reports_last_run_after_a_run(self, health_server):
@@ -69,6 +72,28 @@ class TestHealthEndpoint:
     def test_binds_loopback_only(self, health_server):
         """The default bind must not be a wildcard address."""
         assert health_server.server_address[0] == "127.0.0.1"
+
+    @pytest.mark.unit
+    def test_health_reports_resolved_version(self, health_server, monkeypatch):
+        """The version is resolved per request, so the image tag shows up in the payload."""
+        monkeypatch.setenv("APP_VERSION", "3.1.1")
+
+        with _get(health_server, "/health") as response:
+            payload = json.loads(response.read())
+
+        assert payload["version"] == "3.1.1"
+
+    @pytest.mark.unit
+    def test_health_reports_uptime_in_whole_seconds(self, health_server):
+        """uptime_seconds is a non-negative integer that never decreases."""
+        with _get(health_server, "/health") as response:
+            first = json.loads(response.read())["uptime_seconds"]
+        with _get(health_server, "/health") as response:
+            second = json.loads(response.read())["uptime_seconds"]
+
+        assert isinstance(first, int)
+        assert 0 <= first <= second
+        assert second <= get_uptime_seconds()
 
 
 class TestRunState:
