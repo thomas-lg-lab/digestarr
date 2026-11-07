@@ -37,13 +37,12 @@ tests/
 ## Branching Strategy
 
 ```
-feature/* ──► develop ──► release/* ──► main
+feature/* ──► main ──(published release, tag vX.Y.Z)──► latest
 ```
 
-- New work targets `develop` via `feature/*` branches
-- `main` is the stable production branch (builds `latest` Docker image)
-- Hotfixes use `hotfix/<description>` branched from `main`
-- Renovate PRs target `develop`
+- Trunk-based: short-lived branches, one squash PR into `main`; `main` builds the `edge` image
+- Only a published release (a `v*` tag) builds `latest`
+- Renovate PRs target `main`
 
 ## Code Style
 

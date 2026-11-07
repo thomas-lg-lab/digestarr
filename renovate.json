@@ -5,7 +5,7 @@
     "github>thomas-lg/renovate-config"
   ],
   "baseBranchPatterns": [
-    "develop"
+    "main"
   ],
   "enabledManagers": [
     "pip-compile",
@@ -47,7 +47,7 @@
       ]
     },
     {
-      "description": "Patch and minor land on develop by themselves, majors wait for a human.",
+      "description": "Patch and minor merge into main by themselves (that only moves the edge image; a release is a separate decision), majors wait for a human.",
       "matchUpdateTypes": [
         "minor",
         "patch",
