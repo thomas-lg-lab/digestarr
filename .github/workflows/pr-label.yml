@@ -15,7 +15,7 @@ jobs:
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v7
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
 
       - name: Read conventional commit types config
         id: type-config
@@ -28,7 +28,7 @@ jobs:
           echo "types=$(jq -c . .github/conventional-commit-types.json)" >> "$GITHUB_OUTPUT"
 
       - name: Apply label from PR title prefix
-        uses: bcoe/conventional-release-labels@v1
+        uses: bcoe/conventional-release-labels@886f696738527c7be444262c327c89436dfb95a8 # v1.3.1
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           type_labels: ${{ steps.type-config.outputs.types }}
