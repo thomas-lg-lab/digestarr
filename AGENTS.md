@@ -10,4 +10,4 @@
   workflows of `thomas-lg-lab/.github` at a version tag; change them there. Issue forms and the PR template
   are the organisation's defaults (how to fill them: that repository's README).
 - **Dependencies** are updated by Renovate; do not bump them by hand in a feature PR.
-- **Secrets** never go in the repository, in a commit message or in a log. Technical files are in English.
+- **Secrets** never go in the repository, a commit message or a log. Technical files are in English.
