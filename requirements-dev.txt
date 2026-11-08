@@ -14,7 +14,7 @@ black==26.10.1
     # via digestarr (pyproject.toml)
 build==1.4.0
     # via pip-tools
-certifi==2026.1.4
+certifi==2026.10.18
     # via requests
 charset-normalizer==3.4.4
     # via requests
