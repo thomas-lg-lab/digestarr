@@ -481,12 +481,12 @@ class TestFormatMediaItemLocalUrl:
         """Local plex URL should produce /web/index.html#!/server/... link format."""
         notifier = DiscordNotifier(
             webhook_url="https://discord.com/api/webhooks/test",
-            media_server_url="http://192.168.1.100:32400",
+            media_server_url="http://192.0.2.10:32400",
             media_server_id="srv-abc",
         )
         item: DiscordMediaItem = {"type": "movie", "rating_key": 99, "title": "Local Movie"}
         formatted = notifier._format_media_item(item)
-        assert "192.168.1.100:32400" in formatted
+        assert "192.0.2.10:32400" in formatted
         assert "/web/index.html" in formatted
         assert "srv-abc" in formatted
         assert "99" in formatted

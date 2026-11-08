@@ -291,7 +291,7 @@ Useful for local testing.
 ```yaml
 # configs/config.yml
 media_source: tracearr
-tracearr_url: http://192.168.1.100:3000
+tracearr_url: http://192.0.2.10:3000
 tracearr_api_key: trr_pub_your_token
 ```
 
@@ -582,7 +582,7 @@ curl "http://tautulli:8181/api/v2?apikey=YOUR_KEY&cmd=get_recently_added&count=1
 - Same Docker network: use container hostname (`http://tautulli:8181`)
 - Tautulli on host:
   - Docker Desktop: `http://host.docker.internal:8181`
-  - Linux host IP: `http://192.168.1.100:8181`
+  - Linux host IP: `http://192.0.2.10:8181`
 - External server: `http://tautulli.example.com:8181`
 
 Useful checks:
