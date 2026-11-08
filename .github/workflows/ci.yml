@@ -8,29 +8,24 @@ on:
       - "**.md"
       - "LICENSE"
       - "assets/**"
-      - ".github/release-drafter.yml"
       - ".github/CODEOWNERS"
-      - ".github/ISSUE_TEMPLATE/**"
-      - ".github/conventional-commit-types.json"
       - "renovate.json"
   # No paths-ignore here on purpose. The ruleset on main requires
-  # build-and-push, tests and quality; a workflow skipped by path filtering never
+  # image / build, tests and quality; a workflow skipped by path filtering never
   # reports those checks, so they stay pending forever and the PR can never merge.
   # Docs- and asset-only PRs therefore run the full suite, which costs a couple of
   # minutes and confirms they broke nothing.
   pull_request:
     branches: [main]
-  # A release published by draft-release.yml creates its tag with GITHUB_TOKEN, which
-  # starts no workflow: that job dispatches this one on the tag instead.
+  # A release published by release-drafter.yml creates its tag with GITHUB_TOKEN, which
+  # starts no workflow: that workflow dispatches this one on the tag instead.
   workflow_dispatch:
 
+# A newer push to a PR cancels its run. main and tags never cancel: their run publishes, and
+# killing it mid-push could leave a tag without its attestation.
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
-  cancel-in-progress: true
-
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   build-devcontainer:
@@ -166,67 +161,15 @@ jobs:
         with:
           sarif_file: trivy-results.sarif
 
-  build-and-push:
+  # The image, through the organisation's shared workflow (thomas-lg-lab/.github), once quality
+  # and tests passed: build and Trivy gate on PRs, :edge and :sha-<short> from main, :X.Y.Z and
+  # :latest from a release tag, build provenance attestation. VERSION receives the image version.
+  image:
     needs: [quality, tests]
-    runs-on: ubuntu-latest
     permissions:
       contents: read
+      security-events: write
       packages: write
       id-token: write
       attestations: write
-
-    steps:
-      - name: Checkout repository
-        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@f87e5991a6d7451dcb8d9637bfbc97413f497069 # v4.4.1
-
-      - name: Log in to GitHub Container Registry
-        if: github.event_name != 'pull_request'
-        uses: docker/login-action@8aa5831fb8d48d8f76594c7ddde61ae58019f550 # v4.8.0
-        with:
-          registry: ${{ env.REGISTRY }}
-          username: ${{ github.actor }}
-          password: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Extract metadata (tags, labels)
-        id: meta
-        uses: docker/metadata-action@dc802804100637a589fabce1cb79ff13a1411302 # v6.2.0
-        with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          tags: |
-            # Merging is not releasing: main builds 'edge', only a published release
-            # (a v* tag) moves 'latest', which is what users pull by default.
-            # 'latest' comes from flavor latest=auto: semver tags only, never a
-            # prerelease such as v1.2.0-rc.1.
-            type=raw,value=edge,enable=${{ github.ref == 'refs/heads/main' }}
-            # Tag as version for tags like v1.0.0
-            type=semver,pattern={{version}}
-            type=semver,pattern={{major}}.{{minor}}
-            type=semver,pattern={{major}}
-            # Tag as sha-<commit> for traceability on main
-            type=sha,prefix=sha-,format=short,enable=${{ github.ref == 'refs/heads/main' }}
-
-      - name: Build and push Docker image
-        id: build
-        uses: docker/build-push-action@c3c9e263c25d99ce0380d002d59b67737d91b0dc # v7.4.0
-        with:
-          context: .
-          file: ./Dockerfile
-          push: ${{ github.event_name != 'pull_request' }}
-          tags: ${{ steps.meta.outputs.tags }}
-          labels: ${{ steps.meta.outputs.labels }}
-          annotations: ${{ steps.meta.outputs.annotations }}
-          build-args: VERSION=${{ steps.meta.outputs.version || github.sha }}
-          cache-from: type=gha
-          cache-to: type=gha,mode=max
-          platforms: linux/amd64,linux/arm64
-
-      - name: Generate artifact attestation
-        if: github.event_name != 'pull_request'
-        uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
-        with:
-          subject-name: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-          subject-digest: ${{ steps.build.outputs.digest }}
-          push-to-registry: true
+    uses: thomas-lg-lab/.github/.github/workflows/container-image.yml@d9afae53e09ac73945d6053dcf12e9b1d2bb24aa # v1.1.0
