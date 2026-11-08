@@ -1184,7 +1184,7 @@ class TestPlayStatsEmbed:
                 {"title": "Dune (2021)", "plays": 3, "watch_time_ms": 10_800_000},
             ],
             "top_users": [
-                {"username": "thomas", "plays": 12, "watch_time_ms": 43_200_000},
+                {"username": "alice", "plays": 12, "watch_time_ms": 43_200_000},
                 {"username": "alex", "plays": 3, "watch_time_ms": 10_800_000},
             ],
             "total_plays": 15,
@@ -1219,7 +1219,7 @@ class TestPlayStatsEmbed:
         embed = notifier._create_play_stats_embed(self._stats(), days_back=7)
         top_users = embed.fields[1]["value"].splitlines()
 
-        assert top_users[0] == "🥇 **thomas** — 12 plays (12h 0m)"
+        assert top_users[0] == "🥇 **alice** — 12 plays (12h 0m)"
         assert top_users[1] == "🥈 **alex** — 3 plays (3h 0m)"
 
     @pytest.mark.unit
