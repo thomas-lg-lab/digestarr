@@ -1008,7 +1008,7 @@ def _play(
     media_type="movie",
     started=None,
     duration_ms=3_600_000,
-    username="thomas",
+    username="alice",
     user_id="u-1",
     show_title=None,
     rating_key=None,
@@ -1144,8 +1144,8 @@ class TestPlayStats:
     def test_viewers_are_ranked_by_plays(self, monkeypatch):
         """Top users should be ordered by play count, with their watch time."""
         rows = [
-            _play(media_title="A", username="thomas", user_id="u-1", duration_ms=600_000),
-            _play(media_title="B", username="thomas", user_id="u-1", duration_ms=600_000),
+            _play(media_title="A", username="alice", user_id="u-1", duration_ms=600_000),
+            _play(media_title="B", username="alice", user_id="u-1", duration_ms=600_000),
             _play(media_title="C", username="alex", user_id="u-2", duration_ms=1_200_000),
         ]
         client = _client(HistoryTransport([_page(rows)]), monkeypatch)
@@ -1153,7 +1153,7 @@ class TestPlayStats:
         stats = client.get_play_stats(_cutoff())
 
         assert stats["top_users"] == [
-            {"username": "thomas", "plays": 2, "watch_time_ms": 1_200_000},
+            {"username": "alice", "plays": 2, "watch_time_ms": 1_200_000},
             {"username": "alex", "plays": 1, "watch_time_ms": 1_200_000},
         ]
 
