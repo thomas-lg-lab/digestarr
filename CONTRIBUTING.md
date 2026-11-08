@@ -31,7 +31,7 @@ feature/* ──► main ──(publish a release, tag vX.Y.Z)──► latest i
 | `main` | Integration, always releasable | `edge` |
 | `vX.Y.Z` tag | A release: publish the draft release on GitHub | `latest`, `X.Y.Z`, `X.Y`, `X` |
 
-**Releasing**: release-drafter keeps a draft release up to date from merged PR labels and computes the version; confirm or adjust it and publish the draft (on GitHub, or Actions → Draft Release → Run workflow). That tag is what moves `latest`.
+**Releasing**: release-drafter keeps a draft release up to date from merged PR labels and computes the version; confirm or adjust it and publish the draft (on GitHub, or Actions → Release Drafter → Run workflow). That tag is what moves `latest`.
 
 **Renovate** PRs target `main`. Patch and minor updates merge on their own once the checks pass, which only moves `edge`; majors wait for a review.
 
@@ -168,37 +168,17 @@ PR expectations:
 
 - Keep PRs focused
 - Fill the PR template (the organisation's default): why, what changes, how it was tested; `Closes #N` when it resolves an issue
-- **Use a conventional commit prefix in the PR title** (e.g. `feat: ...`, `fix: ...`, `docs: ...`, `feat!: ...`). The CI title check validates the prefix directly — the PR will be blocked if the title doesn't match the format `<type>[optional scope][optional !]: <description>`, where the optional `!` (after the type or scoped type) marks a breaking change.
-
-  Valid types: `feat`, `improve`, `perf`, `fix`, `bugfix`, `hotfix`, `revert`, `breaking`, `security`, `docs`, `refactor`, `style`, `cleanup`, `chore`, `test`, `build`, `ci`, `actions`, `deps`, `deprecate`, `release`, `wip`
-
-  A label is also automatically applied from the prefix by a separate workflow:
-
-  | Prefix                                                   | Label applied            |
-  | -------------------------------------------------------- | ------------------------ |
-  | `feat`                                                   | `feature`                |
-  | `improve`, `perf`                                        | `enhancement`            |
-  | `fix`, `bugfix`, `hotfix`, `revert`                      | `fix`                    |
-  | `breaking`                                               | `breaking`               |
-  | `security`                                               | `security`               |
-  | `docs`                                                   | `documentation`          |
-  | `refactor`, `style`, `cleanup`, `chore`, `test`, `build` | `chore`                  |
-  | `ci`, `actions`                                          | `github-actions`         |
-  | `deps`                                                   | `dependencies`           |
-  | `deprecate`                                              | `deprecated`             |
-  | `release`                                                | `release`                |
-  | `wip`                                                    | `wip`                    |
-  | `feat!`, `fix!`, … (breaking)                            | above label + `breaking` |
+- **Use a Conventional Commit PR title**: `<type>[optional scope][optional !]: <description>`, with a type among `build`, `chore`, `ci`, `docs`, `feat`, `fix`, `perf`, `refactor`, `revert`, `style`, `test` (commitlint's config-conventional) and `!` for a breaking change. The required `conventions / title` check blocks any other title. The PR's label, and so its release-notes category and the version bump, comes from the type: `feat` → `feature`, `perf` → `enhancement`, `fix`/`revert` → `fix`, `docs` → `documentation`, the others → `chore`, `(deps)` scope → `dependencies`, `!` → `breaking`.
 
 - Ensure CI passes
 
 ## Production Image and Deployment
 
-This repository uses two separate workflows for CI/CD and release management:
+CI/CD and release management use the organisation's shared workflows (`thomas-lg-lab/.github`):
 
 - Production build definition: `Dockerfile`
-- CI/CD pipeline: `.github/workflows/ci.yml` (quality checks, tests, Docker build & push)
-- Release drafter: `.github/workflows/draft-release.yml` (draft release notes on push to `main`; publish via `workflow_dispatch`)
+- CI/CD pipeline: `.github/workflows/ci.yml` (quality checks, tests, then the shared image build, scan and push)
+- Release drafter: `.github/workflows/release-drafter.yml` (draft release notes on push to `main`; publish via `workflow_dispatch`)
 - Deployment example: `docker-compose.yml`
 
 The pipeline gates Docker image publishing on passing quality and test checks. Images are published to `ghcr.io/thomas-lg-lab/digestarr` with the following tags:
@@ -207,7 +187,7 @@ The pipeline gates Docker image publishing on passing quality and test checks. I
 | --- | --- |
 | `edge` | Push to `main` |
 | `latest` | Published release (`v*` tag) |
-| `vX.Y.Z` | Version tag (`v*`) |
+| `X.Y.Z`, `X.Y`, `X` | Version tag (`v*`) |
 | `sha-<shortsha>` | Push to `main` (traceability; short commit SHA) |
 
 Contributors should not use production compose files as the day-to-day development environment.
