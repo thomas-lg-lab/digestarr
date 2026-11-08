@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "description": "Repository config on top of the shared preset github>thomas-lg-lab/renovate-config (schedule, dashboard, deps prefix, labels, squash, GitHub Actions groups). Only the managers listed here run: pip_requirements and pep621 are deliberately left out so pyproject.toml and the lockfiles are only ever changed through pip-compile (see thomas-lg-lab/digestarr#174).",
+  "description": "Repository config on top of the shared preset github>thomas-lg-lab/renovate-config (schedule, dashboard, semantic commits, labels, squash, GitHub Actions groups). Only the managers listed here run: pip_requirements and pep621 are deliberately left out so pyproject.toml and the lockfiles are only ever changed through pip-compile (see thomas-lg-lab/digestarr#174).",
   "extends": [
     "github>thomas-lg-lab/renovate-config"
   ],
