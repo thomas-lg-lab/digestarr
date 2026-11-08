@@ -20,7 +20,7 @@
 #    Reference in config.yml: tracearr_url: ${TRACEARR_URL}
 #
 # 2. Hardcoded Values (Simple for testing):
-#    tracearr_url: http://192.168.1.100:3000
+#    tracearr_url: http://192.0.2.10:3000
 #
 # 3. Docker Secrets (Best for production):
 #    Set in your deployment environment file (example: docker-compose.yml):
@@ -46,7 +46,7 @@ media_source: ${MEDIA_SOURCE}
 # -----------------------------------------------------------------------------
 
 # Tracearr instance URL and public API token
-# Examples: http://tracearr:3000, http://192.168.1.100:3000
+# Examples: http://tracearr:3000, http://192.0.2.10:3000
 # The token is created in Tracearr's UI and looks like trr_pub_...
 # Note: Tracearr cannot report the Plex machine identifier, so set media_server_id
 # below if you want clickable media links.
