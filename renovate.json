@@ -98,7 +98,7 @@
     }
   ],
   "constraints": {
-    "pipTools": "==7.6.2"
+    "pipTools": "==7.7.0"
   },
   "customManagers": [
     {

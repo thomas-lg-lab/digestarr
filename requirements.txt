@@ -16,9 +16,9 @@ discord-webhook==1.4.1
     # via digestarr (pyproject.toml)
 idna==3.15
     # via requests
-pydantic==2.14.3
+pydantic==2.14.4
     # via digestarr (pyproject.toml)
-pydantic-core==2.50.4
+pydantic-core==2.50.5
     # via pydantic
 pyyaml==6.0.3
     # via digestarr (pyproject.toml)
