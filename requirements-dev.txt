@@ -50,7 +50,7 @@ pathspec==1.0.4
     # via
     #   black
     #   mypy
-pip-tools==7.6.2
+pip-tools==7.7.0
     # via digestarr (pyproject.toml)
 platformdirs==4.9.2
     # via black
@@ -58,9 +58,9 @@ pluggy==1.6.0
     # via
     #   pytest
     #   pytest-cov
-pydantic==2.14.3
+pydantic==2.14.4
     # via digestarr (pyproject.toml)
-pydantic-core==2.50.4
+pydantic-core==2.50.5
     # via pydantic
 pygments==2.20.0
     # via pytest
@@ -85,11 +85,11 @@ requests==2.34.2
     # via
     #   digestarr (pyproject.toml)
     #   discord-webhook
-ruff==0.17.4
+ruff==0.17.6
     # via digestarr (pyproject.toml)
 setuptools-scm==10.3.4
     # via digestarr (pyproject.toml)
-types-pyyaml==6.0.12.20261103
+types-pyyaml==6.0.12.20261122
     # via digestarr (pyproject.toml)
 types-requests==2.33.0.20261030
     # via digestarr (pyproject.toml)

@@ -21,17 +21,17 @@ dependencies = [
     "APScheduler>=3.11.3,<4.0.0",
     "discord-webhook>=1.4.1,<2.0.0",
     "pyyaml>=6.0.3,<7.0.0",
-    "pydantic>=2.14.3,<3.0.0",
+    "pydantic>=2.14.4,<3.0.0",
 ]
 
 [project.optional-dependencies]
 dev = [
     "setuptools-scm>=10.3.4",
-    "pip-tools>=7.6.2",
+    "pip-tools>=7.7.0",
     "mypy>=2.4.1",
     "types-requests>=2.33.0.20261030",
-    "types-PyYAML>=6.0.12.20261103",
-    "ruff>=0.17.4",
+    "types-PyYAML>=6.0.12.20261113",
+    "ruff>=0.17.6",
     "black>=26.10.1",
     "pytest>=9.2.0",
     "pytest-cov>=7.1.0",
